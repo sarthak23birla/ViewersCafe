@@ -1,0 +1,68 @@
+<br>
+<video class="responsive-video" controls style="width:100%" onclick="viewed();" id="display" onload="myFunction()">
+    <source src=<%= @video.movie %> >
+</video>
+<a class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
+<p>
+  <strong>Tags:</strong>
+  <% for i in @video.tags %>
+    @<%=i.name %>
+  <%end %>
+</p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @video.title %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @video.description %>
+</p>
+
+<p>
+  <strong>Uploader:</strong>
+  <%= [@video.uploader.first_name,@video.uploader.last_name].join(" ") %>
+</p>
+
+<p>
+  <strong>Published:</strong>
+  <%= @video.published %>
+</p>
+<p>
+  <strong>No. of Views:</strong>
+  <%= number_to_human(@video.count) %>
+</p>
+<p>
+  <strong>No. of Likes:</strong>
+  <%= number_to_human(@likes)%>
+</p>
+
+<p>
+<strong>No. of Dislkes:</strong>
+  <%= number_to_human(@dislikes)%>
+</p>
+<%= render 'comment'%>
+<script type="text/javascript">
+  function viewed(){
+    <% c = Video.find(params[:id]) 
+        b= c.count%>
+    <% if b.nil? 
+        b = 0 
+      end%>
+    <% b = b+1 %>
+    <% c.count = b %>
+    <% c.save%>
+  }
+</script>
+<script type="text/javascript">
+  function myFunction(){
+  <%if @video.preview_images[0].nil?%>
+     var $pop = Popcorn("#display"),
+      poster;
+     poster = $pop.currentTime(10).capture();
+  <% else %>
+    document.getElementById("display-video").poster = '<%= @video.preview_images[0] %>';
+  <%end%>
+  }
+</script>
